@@ -249,7 +249,8 @@ class HttpFawk():
 
         #print pprint.pformat(ssl_sock.getpeercert())
         #dat_cert = ssl.DER_cert_to_PEM_cert(dat_cert)
-        print(dat_cert)
+        # printing out the raw certificate breaks sublimerepl and freaks out the terminal
+        #print(dat_cert)
         #exit()
         # Set a simple HTTP request -- use httplib in actual code. -- FUCK YOU NO
         
