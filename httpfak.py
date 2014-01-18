@@ -22,15 +22,15 @@ class CookiePile():
     def get_cookies_for(self, domain, give_all = False, give_only_expired = False):
         gotten_cookies = []
         for cookie in self.cookies:
-			if cookie.cookie_items.has_key("domain"):
-				if cookie.cookie_items['domain'] in domain:
-					
-					if cookie.cookie_items.has_key("expires"):
-						cookie_expiry = time.strptime(cookie.cookie_items['expires'],self.time_format)
-					
-					
-					
-					gotten_cookies.append(cookie)
+            if cookie.cookie_items.has_key("domain"):
+                if cookie.cookie_items['domain'] in domain:
+                    
+                    if cookie.cookie_items.has_key("expires"):
+                        cookie_expiry = time.strptime(cookie.cookie_items['expires'],self.time_format)
+                    
+                    
+                    
+                    gotten_cookies.append(cookie)
 
 
 class Cookie():
@@ -47,13 +47,13 @@ class Cookie():
             self.cookie_data = parsing_cookie.pop(0)
 
             for item in parsing_cookie:
-				broken_item = item.split("=",1)
-				if len(broken_item) > 1:
-					self.cookie_items[broken_item[0]] = broken_item[1]
-				else:
-					self.cookie_items[broken_item[0]] = broken_item[0]
-				
-						            
+                broken_item = item.split("=",1)
+                if len(broken_item) > 1:
+                    self.cookie_items[broken_item[0]] = broken_item[1]
+                else:
+                    self.cookie_items[broken_item[0]] = broken_item[0]
+                
+                                    
             #print parsing_cookie
 
     def print_status(self):
@@ -288,7 +288,7 @@ class HttpFawk():
     
     
 if __name__ == '__main__':
-    url = "https://www.google.com"
+    url = "https://www.yahoo.com"
 
     port = None
 
