@@ -3,7 +3,7 @@ import time
 import zlib
 import binascii
 import socket, ssl, pprint
-#import argparse
+
 import optparse
 import time
 
@@ -24,12 +24,8 @@ class CookiePile():
         for cookie in self.cookies:
             if cookie.cookie_items.has_key("domain"):
                 if cookie.cookie_items['domain'] in domain:
-                    
                     if cookie.cookie_items.has_key("expires"):
                         cookie_expiry = time.strptime(cookie.cookie_items['expires'],self.time_format)
-                    
-                    
-                    
                     gotten_cookies.append(cookie)
 
 
@@ -71,12 +67,6 @@ class HttpFawk():
         self.header_ident = header_ident
         self.referrer = referrer
         self.cookie = cookie
-        
-        
-
-
-        #url = "http://airborne.gogoinflight.com"
-
 
 
         self.header_ident = self.header_ident.split(":")
@@ -98,20 +88,11 @@ class HttpFawk():
         if self.hostname[2] == "":
                         self.path = "/"
 
-
-
         self.hostname = self.hostname[0]
-
-        #print self.path
-        #print self.hostname
-
-
         self.protocol = self.split_url[0]
 
         
         self.header_store = headerimport.HeaderStore()
-        #dem_headers = header_store.get_headers_for( ("windows","7"), ("firefox", "7"), "www.google.com" )
-        #print dem_headers
         self.header_store.import_headers_from_file()
         self.dem_headers = self.header_store.get_headers_for(
             (self.header_os,self.header_os_version),
@@ -120,9 +101,6 @@ class HttpFawk():
             self.referrer,
             self.cookie
         )
-
-        #print dem_headers
-        #print split_url
 
         self.header_string = ""
         for header in self.dem_headers:
@@ -163,26 +141,17 @@ class HttpFawk():
                     cookie = Cookie(rec_head)
                     cookie.print_status()
 
-            
             print "PAGEDATA*********************"
             hexd_page_data = binascii.hexlify(page_data)
             
-            #print hexd_page_data.find("1f8b0800000000000")
             if hexd_page_data.find("1f8b0800000000000") == 0:
                             d = zlib.decompressobj(16+zlib.MAX_WBITS)
                             page_data = d.decompress(page_data)
             
             
-            
-            
-            #print page_data
         return page_data
                     
             
-
-
-
-        
 
     def http_connection(self, message):
         data_received = ""
@@ -197,18 +166,12 @@ class HttpFawk():
         print 'connecting to %s port %s' % server_address
         sock.connect(server_address)
 
-        
-
         sock.sendall(message)
 
         # Look for the response
-
-
         get_dem_datas = True
-
+        # Trys to get all the data the connection will spit out in chunks of 4096 bytes
         while get_dem_datas:
-                
-                        
             try:
                 data = sock.recv(4096)
             except:
@@ -235,8 +198,8 @@ class HttpFawk():
 
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(2)
-        # require a certificate from the server
-        ssl_sock = ssl.wrap_socket(s,ca_certs=CA_STORE_FILENAME, cert_reqs=ssl.CERT_OPTIONAL)#, cert_reqs=ssl.CERT_REQUIRED)
+        # require a certificate from the server #, cert_reqs=ssl.CERT_REQUIRED)
+        ssl_sock = ssl.wrap_socket(s,ca_certs=CA_STORE_FILENAME, cert_reqs=ssl.CERT_OPTIONAL)
         print("Attempting to connect...")
         server_address = (self.hostname, self.port)
         ssl_sock.connect(server_address)
@@ -245,12 +208,11 @@ class HttpFawk():
         print repr(ssl_sock.getpeername())
         print ssl_sock.cipher()
         dat_cert = ssl_sock.getpeercert(binary_form = True)
-        #help(ssl_sock)
 
         #print pprint.pformat(ssl_sock.getpeercert())
-        #dat_cert = ssl.DER_cert_to_PEM_cert(dat_cert)
+        dat_cert = ssl.DER_cert_to_PEM_cert(dat_cert)
         # printing out the raw certificate breaks sublimerepl and freaks out the terminal
-        #print(dat_cert)
+        print(dat_cert)
         #exit()
         # Set a simple HTTP request -- use httplib in actual code. -- FUCK YOU NO
         
@@ -274,39 +236,25 @@ class HttpFawk():
 
         return data_received     
 
-        
-
     def print_stats(self):
-            print "Current Connection:"
-            print "url: " + self.url
-            print "protocol: "+self.protocol
-            print "port: " + str(self.port)
-            print "hostname: " + self.hostname
-            print "path: " + self.path
-            print "HEADERS USED:"
-            print self.header_string
+        print "Current Connection:"
+        print "url: " + self.url
+        print "protocol: "+self.protocol
+        print "port: " + str(self.port)
+        print "hostname: " + self.hostname
+        print "path: " + self.path
+        print "HEADERS USED:"
+        print self.header_string
     
-    
-    
+
 if __name__ == '__main__':
     url = "https://www.yahoo.com"
-
     port = None
-
-    
-
     verb = "GET"
+    referrer = "http://www.yahoo.com/"
 
     header_ident = "windows:7:firefox:7"
 
-    referrer = "http://www.yahoo.com/"
-    
     fawk = HttpFawk(url, port, verb, header_ident, referrer)
-
     fawk.print_stats()
-
     fawk.get_data()
-
-
-
-

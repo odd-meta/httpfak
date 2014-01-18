@@ -1,4 +1,5 @@
-
+# this script gathers up all the certificates in the roots directory and concatinates them into the CA_STORE_FILENAME file
+# this is used by httpfak.py for ssl connection validation
 import os
 
 CA_STORE_FILENAME = "ca_store.pem"
